@@ -3,13 +3,21 @@ import 'package:dealer/tabs/tab_clothes.dart';
 import 'package:dealer/tabs/tab_hats.dart';
 import 'package:dealer/tabs/tab_pants.dart';
 import 'package:dealer/tabs/tab_shoes.dart';
+import 'package:dealer/views/auth/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ListItems extends StatelessWidget {
   const ListItems({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+
+    String? token = box.read('token');
+    if (token == null) {
+      return LoginPage();
+    }
     return DefaultTabController(
       initialIndex: 0,
       length: 4,
@@ -67,7 +75,7 @@ class ListItems extends StatelessWidget {
                     Tab(
                       child: Container(
                         child: Text(
-                          "Pants",
+                          "Hants",
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 16,

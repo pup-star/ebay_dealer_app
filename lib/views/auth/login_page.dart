@@ -1,7 +1,8 @@
+import 'package:dealer/controller.dart/login_controller.dart';
+import 'package:dealer/models/login_model.dart';
 import 'package:dealer/views/auth/register_page.dart';
 import 'package:dealer/views/auth/widget/email_text_widget.dart';
 import 'package:dealer/views/auth/widget/password_text_field.dart';
-import 'package:dealer/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+      final controller = Get.put(LoginController());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -93,8 +95,20 @@ class _LoginPageState extends State<LoginPage> {
                     height: 30,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Get.offAll(() => const MainScreen());
+                    // onPressed: () {
+                    //   Get.offAll(() => const MainScreen());
+                    // },
+                     onPressed: () {
+                      if (_emailController.text.isNotEmpty &&
+                          _passwordController.text.length >= 8) {
+                        LoginModel model = LoginModel(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+
+                        String data = loginModelToJson(model);
+
+                        controller.loginFunction(data);
+                      }
                     },
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.blue),

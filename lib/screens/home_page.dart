@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:dealer/models/order_recieve_model.dart';
 import 'package:dealer/views/addItems/add_items.dart';
+import 'package:dealer/views/auth/login_page.dart';
 import 'package:dealer/views/notifications/notify_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,8 +17,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<List<OrderRecieveModel>> ListItems = getPostApi();
+  static Future<List<OrderRecieveModel>> getPostApi() async {
+    final box = GetStorage();
+
+    final dealerId = box.read('userId');
+    print(dealerId);
+    var url = Uri.parse(
+        "http://localhost:8000/api/order/dealerId/${dealerId}?orderStatus=Preparing");
+    final response = await http.get(url);
+    final List body = jsonDecode(response.body);
+    return body.map((e) => OrderRecieveModel.fromJson(e)).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+
+    String? token = box.read('token');
+    if (token == null) {
+      return LoginPage();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -100,35 +125,82 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Image.asset("assets/image/sony2.png"),
-                      ),
-                      title: Container(
-                        child: Text(
-                          "items",
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal, fontSize: 18),
-                        ),
-                      ),
-                      subtitle: Container(
-                        child: Text("Quantity: 3"),
-                      ),
-                      trailing: Text(
-                        "90 \$",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    );
-                  }),
+            FutureBuilder<List<OrderRecieveModel>>(
+              future: ListItems,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasData) {
+                  final posts = snapshot.data!;
+                  return buildPosts(posts);
+                } else {
+                  return const Text("No data available");
+                }
+              },
             ),
+            // Expanded(
+            //   child: ListView.builder(
+            //       itemCount: 20,
+            //       itemBuilder: (BuildContext context, int index) {
+            //         return ListTile(
+            //           leading: CircleAvatar(
+            //             backgroundColor: Colors.white,
+            //             child: Image.asset("assets/image/sony2.png"),
+            //           ),
+            //           title: Container(
+            //             child: Text(
+            //               "items",
+            //               style: TextStyle(
+            //                   fontWeight: FontWeight.normal, fontSize: 18),
+            //             ),
+            //           ),
+            //           subtitle: Container(
+            //             child: Text("Quantity: 3"),
+            //           ),
+            //           trailing: Text(
+            //             "90 \$",
+            //             style: TextStyle(fontSize: 15),
+            //           ),
+            //         );
+            //       }),
+            // ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildPosts(List<OrderRecieveModel> posts) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const ScrollPhysics(),
+      itemCount: posts.length,
+      itemBuilder: (BuildContext context, int index) {
+        final post = posts[index];
+        return GestureDetector(
+          onTap: () {},
+          child: ListTile(
+            leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Image.network(post.imageProduct)),
+            title: Container(
+              child: Text(
+                "items",
+                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+              ),
+            ),
+            subtitle: Container(
+              child: Text("Quantity: 0"),
+            ),
+            trailing: Text(
+              "90 \$",
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,7 @@
 import 'package:dealer/views/addDetails/add_details.dart';
+import 'package:dealer/views/addDetails/hats_details.dart';
+import 'package:dealer/views/addDetails/pants_details.dart';
+import 'package:dealer/views/addDetails/shoe_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
@@ -55,7 +58,11 @@ class AddItems extends StatelessWidget {
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-                  Get.to(() => AddDetails());
+                  Get.to(
+                    () => AddDetails(
+                      clothes: 'clothes',
+                    ),
+                  );
                 },
                 child: ListTile(
                   leading: CircleAvatar(
@@ -78,7 +85,9 @@ class AddItems extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(() => AddDetails());
+                  Get.to(() => ShoeDetails(
+                        shoe: 'shoes',
+                      ));
                 },
                 child: ListTile(
                   leading: CircleAvatar(
@@ -101,7 +110,9 @@ class AddItems extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(() => AddDetails());
+                  Get.to(() => PantsDetails(
+                        pants: 'pants',
+                      ));
                 },
                 child: ListTile(
                   leading: CircleAvatar(
@@ -124,7 +135,9 @@ class AddItems extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(() => AddDetails());
+                  Get.to(() => HatsDetails(
+                        hats: 'hats',
+                      ));
                 },
                 child: ListTile(
                   leading: CircleAvatar(

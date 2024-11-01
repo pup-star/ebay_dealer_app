@@ -1,23 +1,24 @@
 import 'dart:io';
+
 import 'package:dealer/main_screen.dart';
 import 'package:dealer/views/auth/widget/email_text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:ionicons/ionicons.dart';
 
-class AddDetails extends StatefulWidget {
-  const AddDetails({super.key, required this.clothes});
+class HatsDetails extends StatefulWidget {
+  const HatsDetails({super.key, required this.hats});
 
-  final String clothes;
+  final String hats;
 
   @override
-  State<AddDetails> createState() => _AddDetailsState();
+  State<HatsDetails> createState() => _HatsDetailsState();
 }
 
-class _AddDetailsState extends State<AddDetails> {
+class _HatsDetailsState extends State<HatsDetails> {
   File? _image;
   //File? _file;
   final picker = ImagePicker();
@@ -62,7 +63,7 @@ class _AddDetailsState extends State<AddDetails> {
     request.fields['title'] = titleController.text;
     request.fields['price'] = priceController.text;
     request.fields['description'] = descriptionController.text;
-    request.fields['type'] = widget.clothes;
+    request.fields['type'] = widget.hats;
     request.fields['dealerName'] = dealerName;
 
     if (_image == null) {
@@ -82,6 +83,7 @@ class _AddDetailsState extends State<AddDetails> {
 
     if (response.statusCode == 200) {
       print('Image Uploded');
+      Get.snackbar("Succussfully", "Uplaod Items");
       Get.offAll(() => const MainScreen());
     } else {
       print('Image Not Uploded');
@@ -203,8 +205,3 @@ class _AddDetailsState extends State<AddDetails> {
     );
   }
 }
-
-
-
-
-//chevron_back_circle

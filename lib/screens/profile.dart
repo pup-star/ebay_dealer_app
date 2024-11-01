@@ -2,12 +2,27 @@ import 'package:dealer/views/auth/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-class Profile extends StatelessWidget {
+import '../controller.dart/login_controller.dart';
+
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+
+    String? token = box.read('token');
+    if (token == null) {
+      return LoginPage();
+    }
+    final controller = Get.put(LoginController());
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -104,7 +119,7 @@ class Profile extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(() => LoginPage());
+                  controller.logout();
                 },
                 child: ListTile(
                   leading: Container(

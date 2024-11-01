@@ -1,3 +1,5 @@
+import 'package:dealer/controller.dart/register_controller.dart';
+import 'package:dealer/models/registration_model.dart';
 import 'package:dealer/views/auth/widget/email_text_widget.dart';
 import 'package:dealer/views/auth/widget/password_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,16 +35,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(RegistrationController());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        // title: Center(
-        //   child: ReuseableText(
-        //     text: "Food Delivery",
-        //     style: appStyle(20, kDark, FontWeight.bold),
-        //   ),
-        // ),
       ),
       body: Container(
         child: ClipRRect(
@@ -78,18 +75,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                       controller: _userController,
                     ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    EmailTextField(
-                      hintText: "Phone",
-                      prefixIcon: Icon(
-                        Icons.person_2_outlined,
-                        size: 22,
-                        color: Colors.grey,
-                      ),
-                      controller: _phoneController,
-                    ),
+                    // SizedBox(
+                    //   height: 25,
+                    // ),
+                    // EmailTextField(
+                    //   hintText: "Phone",
+                    //   prefixIcon: Icon(
+                    //     Icons.person_2_outlined,
+                    //     size: 22,
+                    //     color: Colors.grey,
+                    //   ),
+                    //   controller: _phoneController,
+                    // ),
                     SizedBox(
                       height: 25,
                     ),
@@ -126,7 +123,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Get.to(() => const HomePage());
+                        if (_emailController.text.isNotEmpty &&
+                            _userController.text.isNotEmpty &&
+                            //_phoneController.text.isNotEmpty &&
+                            _passwordController.text.length >= 8) {
+                          RegistrationModel model = RegistrationModel(
+                            username: _userController.text,
+                            // phone: _phoneController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+
+                          String data = registrationModelToJson(model);
+
+                          controller.registrationFunction(data);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue),
